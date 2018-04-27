@@ -43,11 +43,11 @@ const createApp = (App) => {
     }
 
     render() {
-      return <App/>
+      return (<App/>);
     }
   }
   return Main;
-}
+};
 const createState = (store) => {
   console.log('store', store);
   const originalKey =  Object.keys(store);
@@ -57,9 +57,9 @@ const createState = (store) => {
     const Class = store[key];
     const argument = initialState[keys[i]];
     instanceStore[keys[i]] = new Class(argument);
-  })
+  });
   return instanceStore;
-}
+};
 const storeInstance = createState(store);
 console.log('storeInstance*********', storeInstance);
 const render = Component => {

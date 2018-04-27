@@ -12,7 +12,7 @@ const styles = {
 @inject('rentHistory') @observer
 class RentHistoryList extends React.Component {
   componentDidMount = () => {
-    this.props.rentHistory.fetchHistory()
+    this.props.rentHistory.fetchHistory();
     // setTimeout(() => {
     //   this.props.appState.changeLoginStatus(true);
     // }, 2000)

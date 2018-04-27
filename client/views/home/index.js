@@ -41,6 +41,7 @@ class Home extends React.Component {
       if (data.status === 0) {
         const point = data.points[0];
         // var myIcon = new BMap.Icon("http://p7mkbgmyd.bkt.clouddn.com/location.png", new BMap.Size(16, 16));
+        /* eslint-disable */
         var marker = new BMap.Marker(point);
         // var marker = new BMap.Marker(point, {icon: myIcon});
         map.addOverlay(marker);
@@ -51,7 +52,7 @@ class Home extends React.Component {
         map.centerAndZoom(point, 16);
         map.panTo(point);
       }
-    }
+    };
     this.handleGetLocation()
       .then(position => {
         // 经度
@@ -59,9 +60,10 @@ class Home extends React.Component {
         // 纬度
         var latitude = position.coords.latitude;
         console.log("经度:" + longitude + ", 纬度:" + latitude);
+        /* eslint-disable */
         var ggPoint = new BMap.Point(longitude, latitude);
 
-
+        /* eslint-disable */
         let convertor = new BMap.Convertor();
         let pointArr = [];
         pointArr.push(ggPoint);
@@ -73,6 +75,7 @@ class Home extends React.Component {
       });
   }
   componentDidMount() {
+    /* eslint-disable */
     let map = new BMap.Map("map");
     var styleJson = [
       {
@@ -90,7 +93,7 @@ class Home extends React.Component {
           "color": "#ffffff"
         }
       }
-    ]
+    ];
     map.setMapStyle({ styleJson: styleJson });
     this.handleSetCurrentPos(map);
   }

@@ -6,18 +6,19 @@ class RentHistory {
   }
   @observable history
   @action fetchHistory (history) {
+    /* eslint-disable */
     window.fetch(`${apiPrefix}/rent/list`, {
       mode: 'cors'
-    })
-    .then(res => {
-      return res.json();
-    })
-    .then(data => {
-      console.log('fetch res---------------', data);
-      this.history = data;
-    })
-    .catch(err => {
-      console.log(err);
+      })
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log('fetch res---------------', data);
+        this.history = data;
+      })
+      .catch(err => {
+        console.log(err);
     })
   }
   toJson () {

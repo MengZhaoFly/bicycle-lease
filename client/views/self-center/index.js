@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from 'material-ui/styles';
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom';
 import Avatar from 'material-ui/Avatar';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
@@ -41,7 +41,7 @@ class SelfCenter extends React.Component {
           />
         </div>
         <div>
-            <List component="nav">
+          <List component="nav">
             <ListItem button data-go="edit" onClick={this.handlePushState}>
               <ListItemIcon>
                 <img src={editInfo} alt="个人资料" />
@@ -62,7 +62,7 @@ class SelfCenter extends React.Component {
               <ListItemText primary="骑行历史" />
             </ListItem>
           </List>
-          </div>
+        </div>
       </div>
     );
   }

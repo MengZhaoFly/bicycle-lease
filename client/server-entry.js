@@ -19,7 +19,7 @@ export default (stores, routerContext, url, sheetsRegistry, theme, generateClass
         </JssProvider>
       </StaticRouter>
     </Provider>
-  )
+  );
 };
 
 export {

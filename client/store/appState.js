@@ -11,7 +11,7 @@ class AppState {
   toJson () {
     return {
       isLogin: this.isLogin
-    }
+    };
   }
 }
 

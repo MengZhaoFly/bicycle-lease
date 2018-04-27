@@ -3,7 +3,7 @@ import RentHistory from './rent-history';
 export default {
   AppState,
   RentHistory
-}
+};
 
 export const createStoreMap = () => {
   return {

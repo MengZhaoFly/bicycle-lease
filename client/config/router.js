@@ -22,7 +22,7 @@ class PrivateRoute extends React.Component {
             }} />
         )
       } />
-    )
+    );
   }
 }
 // fix mobx edit context
@@ -38,5 +38,5 @@ export default () => {
       <Route path='/edit' component={SelfEdit} />
       <Route path='/wallet' component={SelfWallet} />
     </Switch>
-  )
-}
+  );
+};
