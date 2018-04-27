@@ -1,57 +1,52 @@
 const Koa = require('koa');
-const Router = require('koa-router');
+// const Router = require('koa-router');
 const mount = require('koa-mount');
-const ReactSSR = require('react-dom/server');
 const path = require('path');
-const fs = require('fs');
-const getTemplate = require('./util/getBody');
+const session = require('koa-session');
+const { sessionConf, server } = require('./config/index');
 const app = new Koa();
 const staticApp = new Koa(); // 静态资源static
-const router = new Router();
-
+// const router = new Router();
+const proxy = require('koa-proxy');
+const crossOrigin = require('./middleware/cross-origin');
 const staticServe = require("koa-static");
+const routers = require('./router/index');
 const isDev = process.env.NODE_ENV === 'development';
-console.log(isDev ? 'development' : 'production');
+//  self signed certificate fix https
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+app.use(session(sessionConf, app));
+// api/v1
+app.use(crossOrigin({}));
+app
+  .use(routers.routes())
+  .use(routers.allowedMethods());
+
+// app.use((ctx) => {
+//     ctx.set('Access-Control-Allow-Origin', '*');
+// })
+// 页面的render工作
 if (!isDev) {
-  const serverEntry = require('../dist/server-entry').default;
-  const template = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf-8');
+  const renderProductionRouter = require('./router/render-production');
   staticApp.use(staticServe(path.join(__dirname, '../dist')));
   app.use(mount('/public', staticApp));
-  router.get('*', (ctx) => {
-    let appString = ReactSSR.renderToString(serverEntry);
-    ctx.body = template.replace('<!--app-->', appString);
-  });
+  app
+    .use(renderProductionRouter.routes())
+    .use(renderProductionRouter.allowedMethods());
+
 }
 else {
-  const devStatic = require('./util/dev-static');
-  router.get('/', async (ctx) => {
-    console.log('----url :  ', ctx.request.url);
-    const body = await devStatic();
-    ctx.body = body;
-  });
-  // 遇到public开头的文件 proxy 到 127.0.0.1:8888 请求
-  /* todo : /public/sockjs.js.map  会请求一个map文件 404 error  待处理
-  */
-  router.get('/public/*', async (ctx) => {
-    const url = ctx.request.url;
-    const body = await new Promise((resolve, reject) => {
-      getTemplate(url)
-        .then(template => {
-          resolve(template);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-    ctx.body = body;
-    console.log('----url :  ', ctx.request.url);
-  });
-
+  const renderDevelopmentRouter = require('./router/render-development');
+  app.use(proxy({
+    host: 'https://localhost', // proxy fe
+    match: /^\/public\//        // ...just the /public
+  }));
+  app
+    .use(renderDevelopmentRouter.routes())
+    .use(renderDevelopmentRouter.allowedMethods());
 }
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
 
-app.listen(3001, () => {
-  console.log('server is start');
+
+app.listen(server.port, () => {
+  console.log('server is running', isDev ? 'development' : 'production');
 });

@@ -6,7 +6,13 @@ module.exports = {
     publicPath: '/public/',
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      '@imagesPath': path.resolve(__dirname, '../client/images')
+    }
+  },
+  externals: {
+    'BMap': 'BMap'
   },
   module: {
     rules: [
@@ -20,6 +26,14 @@ module.exports = {
         exclude: [
           path.join(__dirname, '../node_modules')
         ]
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader'
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'file-loader'
       }
     ]
   },

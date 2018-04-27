@@ -3,11 +3,16 @@ const webpack = require('webpack');
 const path = require('path');
 const MemoryFs = require('memory-fs');
 const fs = new MemoryFs();
-const ReactSSR = require('react-dom/server');
+const serverRender = require('./server-render');
+
+
 // const proxy = require('http-proxy-middleware');
+
 const requireFromString = require('require-from-string');
 const getTemplate = require('./getBody');
+
 let serverBundle = null;
+let createStoreMap = null;
 const serverConfig = require('../../build/webpack.config.server');
 const outputErrors = (err, stats) => {
   if (err) {
@@ -34,16 +39,21 @@ serverComplier.watch({}, (err, stats) => {
 
 });
 
-module.exports = () => {
+
+
+module.exports = (url) => {
   return new Promise((resolve, reject) => {
-    getTemplate('/public/index.html')
+    getTemplate('/public/server.ejs')
       .then(template => {
         const contents = fs.readFileSync(path.resolve(serverConfig.output.path, serverConfig.output.filename), 'utf8');
         const app = requireFromString(contents, serverConfig.output.filename);
-        serverBundle = app.default;
-        let content = ReactSSR.renderToString(serverBundle);
-        // ctx.body = template.replace('<!--app-->', content);
-        resolve(template.replace('<!--app-->', content));
+        serverRender(app, template, url)
+        .then(res => {
+          resolve(res)
+        })
+        .catch(err => {
+          reject(err)
+        })
       })
       .catch(err => {
         reject(err);
