@@ -6,7 +6,8 @@ import RentHistory from '../views/rent-history/index';
 import SelfCenter from '../views/self-center/index';
 import SelfEdit from '../views/self-edit/index';
 import SelfWallet from '../views/self-wallet/index';
-
+import Signin from '../views/sign/signin-index';
+import Signup from '../views/sign/signup-index';
 @observer
 class PrivateRoute extends React.Component {
   render() {
@@ -37,6 +38,8 @@ export default () => {
       <Route path='/self' component={SelfCenter} />
       <Route path='/edit' component={SelfEdit} />
       <Route path='/wallet' component={SelfWallet} />
+      <Route path='/signin' component={Signin} />
+      <Route path='/signup' component={Signup} />
     </Switch>
   );
 };

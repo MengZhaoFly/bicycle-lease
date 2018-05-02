@@ -7,6 +7,7 @@ export default {
 
 export const createStoreMap = () => {
   return {
-    appState: new AppState()
+    appState: new AppState(),
+    rentHistory: new RentHistory()
   };
 };

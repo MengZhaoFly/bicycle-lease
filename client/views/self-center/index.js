@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer, inject } from 'mobx-react';
 import { withStyles } from 'material-ui/styles';
 import { withRouter, Link } from 'react-router-dom';
 import Avatar from 'material-ui/Avatar';
@@ -21,7 +22,6 @@ const styles = {
     margin: 10,
   },
 };
-
 class SelfCenter extends React.Component {
   handlePushState = (e) => {
     const href = e.currentTarget.dataset.go;

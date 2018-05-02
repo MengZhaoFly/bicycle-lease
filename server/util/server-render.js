@@ -1,6 +1,6 @@
 const serializeJavascript = require('serialize-javascript');
 const ReactSSR = require('react-dom/server');
-const asyncBootstrap = require('react-async-bootstrapper').default;
+const asyncBootstrapper = require('react-async-bootstrapper').default;
 const ejs = require('ejs');
 const SheetsRegistry= require('react-jss/lib/jss').SheetsRegistry;
 const materialStyle = require('material-ui/styles');
@@ -26,15 +26,18 @@ module.exports = (bundle, template, url) => {
         accent: materialColor.red,
         type: 'light',
       },
+      globalClass: {
+        heightFull: 'calc(100vh - 64px)'
+      },
     });
     const sheetsRegistry = new SheetsRegistry();
     const generateClassName = materialStyle.createGenerateClassName();
     const serverRenderContent = serverBundle(stores, routerContext, url, sheetsRegistry, theme, generateClassName);
 
     // 支持异步
-    asyncBootstrap(serverRenderContent).then(() => {
+    asyncBootstrapper(serverRenderContent).then(() => {
       // 有 redirect: 发生 该对象有 url 属性
-      console.log('stores->', stores.appState.count);
+      // console.log('stores->', stores.appState.count);
       if (routerContext.url) {
         resolve({
           routerContext

@@ -2,16 +2,31 @@ import React from 'react';
 // import { Link } from 'react-router-dom';
 import AppBar from '../../components/AppBar';
 import { withStyles } from 'material-ui/styles';
-// import location from '@imagesPath/location.png';
+import location from '@imagesPath/location.png';
 
-const styles = {
+const styles = theme => ({
   map: {
     width: '100%',
-    height: 'calc(100vh - 56px)'
+    height: theme.globalClass.heightFull
+  },
+  container: {
+    position: 'relative'
+  },
+  location: {
+    position: 'absolute',
+    cursor: 'pointer',
+    right: 0,
+    bottom: 20,
+    width: 56,
+    height: 56
   }
-};
+});
 
 class Home extends React.Component {
+  constructor () {
+    super();
+    this.map = null;
+  }
   handleGetLocation = () => {
     const options = {
       enableHighAccuracy: true,
@@ -37,6 +52,8 @@ class Home extends React.Component {
     });
   }
   handleSetCurrentPos = (map) => {
+    map = map || this.map;
+    console.log(map);
     const translateCallback = (data) => {
       if (data.status === 0) {
         const point = data.points[0];
@@ -77,6 +94,7 @@ class Home extends React.Component {
   componentDidMount() {
     /* eslint-disable */
     let map = new BMap.Map("map");
+    this.map = map;
     var styleJson = [
       {
         "featureType": "all",
@@ -100,10 +118,12 @@ class Home extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div classes={classes.container}>
         <AppBar />
         <div id="map" className={classes.map}>
+          
         </div>
+        <img src={location} alt="" className={classes.location} onClick={this.handleSetCurrentPos}/>
       </div>
     );
   }

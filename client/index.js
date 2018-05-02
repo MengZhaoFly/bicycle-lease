@@ -14,6 +14,9 @@ const theme = createMuiTheme({
     accent: red,
     type: 'light',
   },
+  globalClass: {
+    heightFull: 'calc(100vh - 64px)'
+  },
   overrides: {
     MuiButton: {
       // Name of the styleSheet
@@ -49,7 +52,6 @@ const createApp = (App) => {
   return Main;
 };
 const createState = (store) => {
-  console.log('store', store);
   const originalKey =  Object.keys(store);
   const keys = originalKey.slice(0).map(key => key.charAt(0).toLowerCase() + key.substr(1));
   let instanceStore = {};

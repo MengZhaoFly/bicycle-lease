@@ -1,29 +1,34 @@
-import { observable, computed, action, autorun } from 'mobx';
+import { observable, computed, action, autorun, toJS } from 'mobx';
+import { get } from '../http/axios';
 
 class RentHistory {
-  constructor () {
-    this.history = [];
+  constructor() {
+    this.history = null;
+    this.temp = 90;
   }
   @observable history
-  @action fetchHistory (history) {
+  @observable temp
+  @action fetchHistory(history) {
     /* eslint-disable */
-    window.fetch(`${apiPrefix}/rent/list`, {
-      mode: 'cors'
-      })
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        console.log('fetch res---------------', data);
-        this.history = data;
-      })
-      .catch(err => {
-        console.log(err);
+    return new Promise((resolve, reject) => {
+      get(`/rent/list`)
+        .then(data => {
+          console.log('fetch res---------------', data);
+          this.history = data;
+          resolve(data)
+        })
+        .catch(err => {
+          console.log(err);
+          reject(err);
+        })
     })
   }
-  toJson () {
+  @action changeTemp(val) {
+    this.temp = val;
+  }
+  toJson() {
     return {
-      history: this.history
+      history: toJS(this.history)
     }
   }
 }

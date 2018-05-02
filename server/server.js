@@ -1,3 +1,5 @@
+const https = require('https');
+const fs = require('fs');
 const Koa = require('koa');
 // const Router = require('koa-router');
 const mount = require('koa-mount');
@@ -14,7 +16,10 @@ const routers = require('./router/index');
 const isDev = process.env.NODE_ENV === 'development';
 //  self signed certificate fix https
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
+const options = {
+  key: fs.readFileSync(path.join(__dirname, './ssl/server.key')),
+  cert: fs.readFileSync(path.join(__dirname, './ssl/server.crt'))
+};
 app.use(session(sessionConf, app));
 // api/v1
 app.use(crossOrigin({}));
@@ -46,7 +51,7 @@ else {
     .use(renderDevelopmentRouter.allowedMethods());
 }
 
-
-app.listen(server.port, () => {
-  console.log('server is running', isDev ? 'development' : 'production');
-});
+https.createServer(options, app.callback()).listen(server.port);
+// app.listen(server.port, () => {
+//   console.log('server is running', isDev ? 'development' : 'production');
+// });

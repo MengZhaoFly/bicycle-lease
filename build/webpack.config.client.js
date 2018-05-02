@@ -21,9 +21,6 @@ const config = webpackMerge(baseConfig, {
     new HTMLPlugin({
       template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.html'),
       filename: 'server.ejs'
-    }),
-    new webpack.DefinePlugin({
-      apiPrefix: "'http://localhost:3001/api/v1'"
     })
   ]
 })
