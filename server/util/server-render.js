@@ -46,7 +46,7 @@ module.exports = (bundle, template, url) => {
       }
       // ctx.body = template.replace('<!--app-->', content);
       const state = getStoresState(stores)
-      console.log(stores, state);
+      // console.log(stores, state);
       let content = ReactSSR.renderToString(serverRenderContent);
       const html = ejs.render(template, {
         appString: content,

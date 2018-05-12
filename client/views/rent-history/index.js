@@ -15,6 +15,14 @@ const styles = theme => ({
   }),
   progress: {
     margin: theme.spacing.unit * 2,
+  },
+  container: {
+    position: 'relative'
+  },
+  loading: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)'
   }
 });
 
@@ -33,39 +41,55 @@ class RentHistoryList extends React.Component {
       console.log('asyncBootstrap res', res);
       return true;
     })
-    .catch(err => {
-      return false;
-    })
+      .catch(err => {
+        return false;
+      })
   }
   renderList = () => {
     const {classes} = this.props;
     const {history} = this.props.rentHistory;
     const historyList = history && history.slice(0);
+    console.log('historyList', historyList);
     if (!historyList) {
       return (
-        <CircularProgress className={classes.progress} size={50} />
+        <div className={classes.loading}>
+          <CircularProgress className={classes.progress} size={50} />
+        </div>
       );
+    }
+    if (historyList.length === 0) {
+      return (
+        <Paper className={classes.root} elevation={4}>
+          <Typography variant="headline" component="h3">
+            暂无记录
+            </Typography>
+          <Typography component="p">
+            快去选择一辆车吧。
+            </Typography>
+        </Paper>
+      )
     }
     return (
       historyList.map((list, i) => (
-        <div key={i}>
-          <Paper className={classes.root} elevation={4}>
-            <Typography variant="headline" component="h3">
-              {list.beginTime + '至' + list.endTime}
-            </Typography>
-            <Typography component="p">
-              车辆编号：{list.bicycleID} 花费{list.pay}
-            </Typography>
-          </Paper>
-        </div>
+        <Paper className={classes.root} elevation={4} key={i}>
+          <Typography variant="headline" component="h3">
+            {list.beginTime + '至' + list.endTime}
+          </Typography>
+          <Typography component="p">
+            车辆编号：{list.bicycleID} 花费{list.pay}
+          </Typography>
+        </Paper>
       ))
     );
   }
   render() {
+    const {classes} = this.props;
     return (
       <div>
         <AppBar />
-        {this.renderList()}
+        <div className={classes.container}>
+          {this.renderList()}
+        </div>
       </div>
     );
   }

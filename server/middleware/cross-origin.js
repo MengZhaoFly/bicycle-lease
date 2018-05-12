@@ -2,8 +2,8 @@ module.exports = (option) => {
   const origin = option.origin || '*';
   const allowMethods = option.allowMethods || 'GET,POST,PUT,DELETE';
   const credentials = option.credentials || false;
-  const allowHeaders = option.allowHeaders || 'Content-Type';
-  const exposeHeaders = option.exposeHeaders || '*';
+  const allowHeaders = option.allowHeaders || 'Content-Type,authorization';
+  const exposeHeaders = option.exposeHeaders || 'authorization';
   const maxAge = option.maxAge || 1728000;
   return async (ctx, next) => {
     ctx.set('Access-Control-Allow-Origin', origin);

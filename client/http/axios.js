@@ -1,10 +1,17 @@
 import axios from 'axios'
 
-const baseUrl = 'https://192.168.1.103:3001/api/v1';
+// client
+if (typeof localStorage !== 'undefined' && localStorage.getItem('jwt')) {
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('jwt');
+}
+// server session
+const baseUrl = 'https://182.98.129.131:3001/api/v1';
 
-export const get = (url) => {
+export const get = (url, params) => {
   return new Promise((resolve, reject) => {
-    axios.get(`${baseUrl}${url}`)
+    axios.get(`${baseUrl}${url}`, {
+      params: params
+    })
       .then(resp => {
         resolve(resp.data)
       }).catch(reject)

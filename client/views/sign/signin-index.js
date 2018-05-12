@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { withStyles } from 'material-ui/styles';
 import { withRouter, Link } from 'react-router-dom';
+import { observer, inject } from 'mobx-react';
 import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
@@ -48,10 +49,11 @@ const styles = theme => ({
     margin: '20px 0 5px 0'
   },
   buttonLike: {
-      color: theme.palette.primary.main
+    color: theme.palette.primary.main
   }
 });
 
+@inject('appState') @observer
 class Signin extends React.Component {
   state = {
     phoneNum: '',
@@ -91,11 +93,16 @@ class Signin extends React.Component {
     })
       .then(res => {
         if (res.status === 200) {
+          if (res.jwt) {
+            localStorage.setItem('jwt', res.jwt);
+          }
+          console.log('登陆结果', res);
           this.setState({
             dialogOpen: true,
             dialogMsg: res.msg
           })
-
+          this.props.appState.changeLoginStatus(true, res.userID);
+          this.props.appState.changeAvatarSrc(res.avatarSrc);
         }
         else {
           this.setState({
@@ -104,6 +111,18 @@ class Signin extends React.Component {
           })
         }
       })
+  }
+  handleOK = () => {
+    const search = this.props.history.location && this.props.history.location.search;
+    // ?from=/index
+    this.setState({
+      dialogOpen: false,
+      dialogMsg: null
+    })
+    if (search) {
+      let searchVal = search.split('=');
+      this.props.history.push(searchVal[1]);
+    }
   }
   render() {
     const {classes} = this.props;
@@ -122,7 +141,7 @@ class Signin extends React.Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <span onClick={this.handleClose} className={classes.buttonLike}>
+            <span onClick={this.handleOK} className={classes.buttonLike}>
               OK
             </span>
           </DialogActions>

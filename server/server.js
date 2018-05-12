@@ -3,6 +3,7 @@ const fs = require('fs');
 const Koa = require('koa');
 // const Router = require('koa-router');
 const mount = require('koa-mount');
+const koaBody = require('koa-body');
 const path = require('path');
 const session = require('koa-session');
 const { sessionConf, server } = require('./config/index');
@@ -13,7 +14,8 @@ const proxy = require('koa-proxy');
 const crossOrigin = require('./middleware/cross-origin');
 const staticServe = require("koa-static");
 const routers = require('./router/index');
-const isDev = process.env.NODE_ENV === 'development';
+// const isDev = process.env.NODE_ENV === 'development';
+const isDev = 'development';
 //  self signed certificate fix https
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const options = {
@@ -21,6 +23,7 @@ const options = {
   cert: fs.readFileSync(path.join(__dirname, './ssl/server.crt'))
 };
 app.use(session(sessionConf, app));
+app.use(koaBody({ multipart: true }));
 // api/v1
 app.use(crossOrigin({}));
 app

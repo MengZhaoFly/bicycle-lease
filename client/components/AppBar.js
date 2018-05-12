@@ -2,12 +2,14 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import { observer, inject } from 'mobx-react';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import AccountCircle from 'material-ui-icons/AccountCircle';
 import LOGO from '@imagesPath/bicycle.svg';
+import { get, post } from '../http/axios';
 
 const styles = {
   root: {
@@ -39,11 +41,25 @@ const styles = {
   }
 };
 
+@inject('appState') @observer
 class MenuAppBar extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
   };
+  componentDidMount = () => {
+    get('/sign/auth')
+    .then(res => {
+      if (res.status === 200) {
+        this.props.appState.changeLoginStatus(true, res.userId);
+        this.props.appState.changeAvatarSrc(res.avatarSrc);
+        setTimeout(() => {
+          this.props.onFinishAuth && this.props.onFinishAuth();
+        }, 0);
+      }
+      
+    })
+  }
   // login logout control
   handleChange = (event, checked) => {
     this.setState({ auth: checked });

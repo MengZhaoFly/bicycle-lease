@@ -1,9 +1,9 @@
 const sessionConf = {
-  key: 'koa:sess',
-  maxAge: 10 * 60 * 1000,
-  overwrite: false,
+  key: 'bicycle',
+  maxAge: 3 * 60 * 1000,
+  overwrite: true,
   httpOnly: true,
-  signed: true,
+  signed: false,
   rolling: false,
   renew: false,
 }

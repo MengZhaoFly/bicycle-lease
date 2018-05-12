@@ -22,6 +22,8 @@ const styles = {
     margin: 10,
   },
 };
+
+@inject('appState') @observer
 class SelfCenter extends React.Component {
   handlePushState = (e) => {
     const href = e.currentTarget.dataset.go;
@@ -29,16 +31,21 @@ class SelfCenter extends React.Component {
     this.props.history.push(href);
   }
   render() {
-    const {classes} = this.props;
+    const { classes } = this.props;
+    const { avatarSrc } = this.props.appState;
     return (
       <div>
         <AppBar />
         <div className={classes.row}>
-          <Avatar
-            alt="头像"
-            src="http://p7mkbgmyd.bkt.clouddn.com/avatar.jpg"
-            className={classes.bigAvatar}
-          />
+          {
+            avatarSrc ?
+              <Avatar
+                alt="头像"
+                src={avatarSrc}
+                className={classes.bigAvatar}
+              /> :
+            <div>头像加载中</div>
+          }
         </div>
         <div>
           <List component="nav">
@@ -51,13 +58,13 @@ class SelfCenter extends React.Component {
             <Divider />
             <ListItem button data-go="/wallet" onClick={this.handlePushState}>
               <ListItemIcon>
-                <img src={wallet} alt="我的钱包"/>
+                <img src={wallet} alt="我的钱包" />
               </ListItemIcon>
               <ListItemText primary="我的钱包" />
             </ListItem>
             <ListItem button onClick={this.handlePushState} data-go="/rent">
               <ListItemIcon>
-                <img src={history} alt="骑行历史"/>
+                <img src={history} alt="骑行历史" />
               </ListItemIcon>
               <ListItemText primary="骑行历史" />
             </ListItem>
