@@ -83,7 +83,7 @@ class Signin extends React.Component {
     this.setState({
       dialogOpen: false,
       dialogMsg: null
-    })
+    });
   }
   handleSignIn = () => {
     const { phoneNum, password } = this.state;
@@ -100,7 +100,7 @@ class Signin extends React.Component {
           this.setState({
             dialogOpen: true,
             dialogMsg: res.msg
-          })
+          });
           this.props.appState.changeLoginStatus(true, res.userID);
           this.props.appState.changeAvatarSrc(res.avatarSrc);
         }
@@ -108,9 +108,9 @@ class Signin extends React.Component {
           this.setState({
             dialogOpen: true,
             dialogMsg: res.msg
-          })
+          });
         }
-      })
+      });
   }
   handleOK = () => {
     const search = this.props.history.location && this.props.history.location.search;
@@ -118,7 +118,7 @@ class Signin extends React.Component {
     this.setState({
       dialogOpen: false,
       dialogMsg: null
-    })
+    });
     if (search) {
       let searchVal = search.split('=');
       this.props.history.push(searchVal[1]);
@@ -192,7 +192,7 @@ class Signin extends React.Component {
 
               <Button variant="raised" color="primary" className={classes.button} onClick={this.handleSignIn}>
                 登录
-            </Button>
+              </Button>
             </FormControl>
           </div>
         </div>

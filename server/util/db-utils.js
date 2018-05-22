@@ -5,22 +5,22 @@ let query = function (sql, values) {
   return new Promise((resolve, reject) => {
     pool.getConnection(function (err, connection) {
       if (err) {
-        resolve(err)
+        resolve(err);
       } else {
         // values = values.map(value => connection.escape(value));
         console.log('execute sql', sql, values);
         connection.query(sql, values, (err, rows) => {
           if (err) {
             console.log('db util query err', err);
-            reject(err)
+            reject(err);
           } else {
-            resolve(rows)
+            resolve(rows);
           }
-          connection.release()
-        })
+          connection.release();
+        });
       }
-    })
-  })
+    });
+  });
 
 };
 let insert = function (sql, values) {
@@ -28,28 +28,28 @@ let insert = function (sql, values) {
   return new Promise((resolve, reject) => {
     pool.getConnection(function (err, connection) {
       if (err) {
-        resolve(err)
+        resolve(err);
       } else {
         connection.execute(sql, values, (err, rows) => {
           if (err) {
             console.log(err);
-            reject(err)
+            reject(err);
           } else {
-            resolve(rows)
+            resolve(rows);
           }
-          connection.release()
-        })
+          connection.release();
+        });
       }
-    })
-  })
-}
+    });
+  });
+};
 let transAction = function (argument) {
   let allResults = [];
 
   return new Promise((resolve, reject) => {
     pool.getConnection(function (err, connection) {
       if (err) {
-        reject(err)
+        reject(err);
       }
       const transArgument = (sqlArr) => {
         sqlArr = Array.from(sqlArr);
@@ -70,7 +70,7 @@ let transAction = function (argument) {
           return connection.query(currentSql.sql, currentSql.value, function (error, results, fields) {
             if (error) {
               return connection.rollback(function () {
-                reject(err)
+                reject(err);
               });
             }
             else {
@@ -80,17 +80,17 @@ let transAction = function (argument) {
             }
           });
         }
-      }
+      };
       connection.beginTransaction(err => {
         argument = Array.from(argument);
         if (err) reject(err);
         transArgument(argument);
-      })
-    })
-  })
-}
+      });
+    });
+  });
+};
 module.exports = {
   query,
   insert,
   transAction
-}
+};

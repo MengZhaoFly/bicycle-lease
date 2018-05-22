@@ -16,7 +16,7 @@ const createJwt = (payload) => {
   const header = {
     typ: "JWT",
     alg: "HS256"
-  }
+  };
   payload = {
     ...payload,
     iat,
@@ -24,7 +24,7 @@ const createJwt = (payload) => {
     iss: "Zhao Meng",
     aud: "https://localhost",
     sub: "all"
-  }
+  };
   const headerB64 = Buffer.from(JSON.stringify(header)).toString('base64');
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString('base64');
   const unSignature = `${headerB64}.${payloadB64}`;
@@ -36,20 +36,20 @@ const createJwt = (payload) => {
     payload,
     header
   };
-}
-const getBody = (ctx) => {
-  return new Promise(function (resolve, reject) {
-    var data = '';
-    ctx.req.on('data', function (chunk) {
-      console.log('ing ....', chunk);
-      data += chunk;
-    })
-    ctx.req.on('end', function (chunk) {
-      console.log('end ...', chunk);
-      resolve(data);
-    })
-  })
-}
+};
+// const getBody = (ctx) => {
+//   return new Promise(function (resolve, reject) {
+//     var data = '';
+//     ctx.req.on('data', function (chunk) {
+//       console.log('ing ....', chunk);
+//       data += chunk;
+//     })
+//     ctx.req.on('end', function (chunk) {
+//       console.log('end ...', chunk);
+//       resolve(data);
+//     })
+//   })
+// }
 /*const handleFileStream = (ctx) => {
   return new Promise(function (resolve, reject) {
     let totalBuffer = Buffer.from([]);
@@ -65,7 +65,7 @@ const getBody = (ctx) => {
 }*/
 const routers = router
   .post('/upload', async (ctx) => {
-    const file = ctx.request.body.files.file
+    const file = ctx.request.body.files.file;
     console.log('file', ctx.request.body);
     let accessKey = 'Iw0Ch6DoNxzwiFR6rKWxr6y8OT_PhZcQ_SKJtZi7';
     let secretKey = 'hoTswaVQ1Idqhmi-Jc6NoRRngmjwgSXE7OtRTzaS';
@@ -82,14 +82,14 @@ const routers = router
     config.zone = qiniu.zone.Zone_z0;
     var formUploader = new qiniu.form_up.FormUploader(config);
     var putExtra = new qiniu.form_up.PutExtra();
-    console.log('------------------------------------------------')
+    console.log('------------------------------------------------');
     // const buffer = await handleFileStream(ctx);
     const filename = `${ctx.session.userId}-${moment().format('YYYY-MM-DD~HH:mm:ss')}.png`;
     // fs.writeFileSync(filename, buffer);
     // fs.writeFileSync('123.txt', '123 test');
     const readableStream = fs.createReadStream(file.path);
     try {
-      let avatarSrc = `//p7mkbgmyd.bkt.clouddn.com/${filename}`
+      let avatarSrc = `//p7mkbgmyd.bkt.clouddn.com/${filename}`;
       let res = await dbUtil.query('UPDATE `user` SET avatarSrc = ? WHERE id = ?', [avatarSrc, ctx.request.body.fields.userId]);
       let putRes = await new Promise((resolve, reject) => {
         formUploader.putStream(uploadToken, filename, readableStream, putExtra, function (respErr,
@@ -100,9 +100,9 @@ const routers = router
           resolve({
             respInfo,
             respBody
-          })
+          });
         });
-      })
+      });
       console.log('putRes', putRes);
       if (putRes.respInfo.statusCode === 200 && res) {
         // http:avatar.jpg
@@ -112,26 +112,27 @@ const routers = router
           msg: 'success',
           avatarSrc,
           userId: ctx.request.body.fields.userId
-        }
+        };
       }
       else {
         ctx.body = {
           status: 400,
           msg: 'failure'
-        }
+        };
       }
     } catch (error) {
       console.log(error);
       ctx.body = {
         status: 500,
         msg: 'failure'
-      }
+      };
     }
 
 
   })
   .get('/rent/list', async (ctx) => {
-    let result = await dbUtil.query('SELECT * FROM `rent-history`');
+    const { userId } = ctx.request.query;
+    let result = await dbUtil.query('SELECT * FROM `rent-history` WHERE userID = ?', [userId]);
     // 时间格式化
     result && result.forEach(list => {
       if (list.beginTime) {
@@ -140,7 +141,7 @@ const routers = router
       if (list.endTime) {
         list.endTime = momentTz.tz(list.endTime, 'Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
       }
-    })
+    });
     ctx.body = result;
   })
   .get('/bicycle/list', async (ctx) => {
@@ -153,7 +154,7 @@ const routers = router
       ctx.body = {
         status: 200,
         userId: ctx.session.userId
-      }
+      };
       return false;
     }
     const jwt = ctx.request.headers && ctx.request.headers['authorization'];
@@ -162,7 +163,7 @@ const routers = router
       ctx.body = {
         status: 401,
         keepLogin: false
-      }
+      };
       return false;
     }
     const [headerB64, payloadB64, signatureB64] = jwt.split('.');
@@ -174,7 +175,7 @@ const routers = router
         ctx.body = {
           status: 401,
           msg: 'timeout'
-        }
+        };
         return false;
       }
       const { alg } = header;
@@ -191,20 +192,20 @@ const routers = router
             status: 200,
             userId,
             avatarSrc: result[0].avatarSrc
-          }
+          };
         }
         else {
           ctx.body = {
             status: 401,
             msg: 'auth failed'
-          }
+          };
         }
       }
     } catch (error) {
       console.log(error);
       ctx.body = {
         status: 401
-      }
+      };
     }
   })
   .post('/sign/up', async (ctx) => {
@@ -220,12 +221,12 @@ const routers = router
       ctx.body = {
         status: 200,
         msg: '注册成功'
-      }
+      };
     } catch (error) {
       ctx.body = {
         status: 500,
         msg: '注册失败'
-      }
+      };
     }
   })
   .post('/sign/in', async (ctx) => {
@@ -255,13 +256,13 @@ const routers = router
           avatarSrc: result[0]['avatarSrc'],
           jwt: value,
           msg: '登录成功'
-        }
+        };
       }
       else {
         ctx.body = {
           status: 400,
           msg: '登录失败'
-        }
+        };
       }
 
     }
@@ -270,7 +271,7 @@ const routers = router
       ctx.body = {
         status: 500,
         msg: '登录失败'
-      }
+      };
     }
   })
   .get('/using/status', async (ctx) => {
@@ -282,14 +283,15 @@ const routers = router
     };
     try {
       const queryBicycle = await dbUtil.query('SELECT bicycleID FROM `rent-history` WHERE userID = ?', userId);
+      let queryBicycleCount = queryBicycle.length;
       console.log('queryBicycle', queryBicycle);
-      if (!queryBicycle || queryBicycle.length === 0) {
+      if (!queryBicycle || queryBicycleCount === 0) {
         body.status = 200;
         ctx.body = body;
       }
-      const bicycleId = queryBicycle[0].bicycleID;
+      const bicycleId = queryBicycle[queryBicycleCount - 1].bicycleID;
       const bicycleIdRes = await dbUtil.query('SELECT * FROM `bicycle` WHERE isUsing = "y" and id = ?', [bicycleId]);
-      const userIdRes = await dbUtil.query('SELECT * FROM `rent-history` WHERE bicycleID = ? AND userID = ?', [bicycleId, userId]);
+      const userIdRes = await dbUtil.query('SELECT * FROM `rent-history` WHERE endTime IS NULL AND bicycleID = ? AND userID = ?', [bicycleId, userId]);
       // console.log('bicycleIdRes', bicycleIdRes, 'userIdRes', userIdRes);
       if (bicycleIdRes.length === 0) {
         body.status = 200;
@@ -328,7 +330,7 @@ const routers = router
       if (res && res.affectedRows > 0) {
         ctx.body = {
           status: 200
-        }
+        };
       }
     } catch (error) {
       console.log(error);
@@ -336,10 +338,11 @@ const routers = router
   })
   .post('/using/create', async (ctx) => {
     try {
-      let data = await getBody(ctx);
-      data = JSON.parse(data);
+      // let data = await getBody(ctx);
+      // data = JSON.parse(data);
+      let data = ctx.request.body;
       if (data.userId && data.bicycleId) {
-        let beginTime = moment().format('YYYY-MM-DD HH:mm:ss')
+        let beginTime = moment().format('YYYY-MM-DD HH:mm:ss');
         let result = await dbUtil.transAction([
           {
             sql: 'UPDATE bicycle SET isUsing = "y" WHERE id = ?',
@@ -349,56 +352,57 @@ const routers = router
             sql: 'INSERT INTO `rent-history` (`bicycleId`, `userId`, `beginTime`) VALUES (?, ?, ?)',
             value: [data.bicycleId, data.userId, beginTime]
           }
-        ])
+        ]);
         console.log('result', result);
         ctx.body = {
           status: 200,
           beginTime: beginTime,
           msg: '用车成功'
-        }
+        };
       }
       else {
         ctx.body = {
           status: 400,
           msg: 'params required'
-        }
+        };
       }
     } catch (error) {
       console.log('/using/create-------------------', error);
       ctx.body = {
         status: 500,
         msg: 'server error'
-      }
+      };
     }
   })
   .post('/using/close', async (ctx) => {
     try {
-      let data = await getBody(ctx);
-      data = JSON.parse(data);
+      // let data = await getBody(ctx);
+      // data = JSON.parse(data);
+      let data = ctx.request.body;
       console.log('/using/close', data);
       const endTime = moment().format('YYYY-MM-DD HH:mm:ss');
       let result = await dbUtil.transAction([
         {
-          sql: 'UPDATE `rent-history` SET endTime = ?, pay = ? WHERE bicycleID = ? and userID = ?',
+          sql: 'UPDATE `rent-history` SET endTime = ?, pay = ? WHERE endTime IS NULL AND bicycleID = ? and userID = ?',
           value: [endTime, data.pay, data.bicycleId, data.userId]
         },
         {
           sql: 'UPDATE bicycle SET isUsing = "n" WHERE id = ?',
           value: [data.bicycleId]
         }
-      ])
+      ]);
       console.log('result', result);
       ctx.body = {
         status: 200,
         endTime: endTime,
         msg: '还车成功'
-      }
+      };
     } catch (error) {
       ctx.body = {
         status: 500,
         msg: '还车失败'
-      }
+      };
     }
-  })
+  });
 
-module.exports = routers
+module.exports = routers;

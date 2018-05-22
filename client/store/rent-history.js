@@ -8,10 +8,12 @@ class RentHistory {
   }
   @observable history
   @observable temp
-  @action fetchHistory(history) {
+  @action fetchHistory(userId) {
     /* eslint-disable */
     return new Promise((resolve, reject) => {
-      get(`/rent/list`)
+      get(`/rent/list`, {
+        userId
+      })
         .then(data => {
           console.log('fetch res---------------', data);
           this.history = data;

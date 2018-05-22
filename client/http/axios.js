@@ -1,11 +1,11 @@
-import axios from 'axios'
+import axios from 'axios';
 
 // client
 if (typeof localStorage !== 'undefined' && localStorage.getItem('jwt')) {
   axios.defaults.headers.common['authorization'] = localStorage.getItem('jwt');
 }
 // server session
-const baseUrl = 'https://182.98.129.131:3001/api/v1';
+const baseUrl = 'https://192.168.1.100:3001/api/v1';
 
 export const get = (url, params) => {
   return new Promise((resolve, reject) => {
@@ -13,22 +13,22 @@ export const get = (url, params) => {
       params: params
     })
       .then(resp => {
-        resolve(resp.data)
-      }).catch(reject)
-  })
-}
+        resolve(resp.data);
+      }).catch(reject);
+  });
+};
 
 export const post = (url, data) => {
   return new Promise((resolve, reject) => {
     axios.post(`${baseUrl}${url}`, data)
       .then(resp => {
-        resolve(resp.data)
+        resolve(resp.data);
       })
-      .catch(reject)
-  })
-}
+      .catch(reject);
+  });
+};
 
 export default {
   get,
   post
-}
+};

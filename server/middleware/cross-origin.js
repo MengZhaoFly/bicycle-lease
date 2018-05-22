@@ -13,5 +13,5 @@ module.exports = (option) => {
     // ctx.set('Access-Control-Expose-Headers', exposeHeaders);
     ctx.set('Access-Control-Max-Age', maxAge);
     await next();
-  }
-}
+  };
+};

@@ -24,7 +24,7 @@ import AccountCircle from 'material-ui-icons/AccountCircle';
 
 // theme.globalClass.heightFull
 const styles = theme => {
-  console.log(theme)
+  console.log(theme);
   return {
     margin: {
       margin: theme.spacing.unit,
@@ -49,7 +49,7 @@ const styles = theme => {
     buttonLike: {
       color: theme.palette.primary.main
     }
-  }
+  };
 };
 
 class Signin extends React.Component {
@@ -99,7 +99,7 @@ class Signin extends React.Component {
     if (!this.handleValidate(password)) {
       this.setState({
         pwdError: true
-      })
+      });
       return false;
     }
     // 先focus pwd 然后 blur pwdError: true 之后没有设为 false
@@ -147,7 +147,7 @@ class Signin extends React.Component {
     this.setState({
       dialogOpen: false,
       dialogMsg: null
-    })
+    });
   }
   handleSignup = () => {
     const {password, repassword, phoneNum} = this.state;
@@ -160,16 +160,16 @@ class Signin extends React.Component {
           this.setState({
             dialogOpen: true,
             dialogMsg: res.msg
-          })
+          });
 
         }
         else {
           this.setState({
             dialogOpen: true,
             dialogMsg: res.msg
-          })
+          });
         }
-      })
+      });
   }
   render() {
     const {classes} = this.props;
@@ -233,7 +233,7 @@ class Signin extends React.Component {
                   </InputAdornment>
                 }
               />
-              {pwdError && 　<FormHelperText id="name-error-text">密码由字母数字组成，长度大于６</FormHelperText>}
+              {pwdError && <FormHelperText id="name-error-text">密码由字母数字组成，长度大于６</FormHelperText>}
             </FormControl>
             <FormControl className={classNames(classes.margin, classes.textField)}
               error={rePwdError}
@@ -268,7 +268,7 @@ class Signin extends React.Component {
             <FormControl className={classNames(classes.margin, classes.textField)}>
               <Button variant="raised" color="primary" className={classes.button} onClick={this.handleSignup}>
                 注册
-            </Button>
+              </Button>
             </FormControl>
           </div>
         </div>

@@ -44,7 +44,7 @@ class SelfCenter extends React.Component {
                 src={avatarSrc}
                 className={classes.bigAvatar}
               /> :
-            <div>头像加载中</div>
+              <div>头像加载中</div>
           }
         </div>
         <div>
@@ -56,12 +56,12 @@ class SelfCenter extends React.Component {
               <ListItemText primary="个人资料" />
             </ListItem>
             <Divider />
-            <ListItem button data-go="/wallet" onClick={this.handlePushState}>
+            {/*<ListItem button data-go="/wallet" onClick={this.handlePushState}>
               <ListItemIcon>
                 <img src={wallet} alt="我的钱包" />
               </ListItemIcon>
               <ListItemText primary="我的钱包" />
-            </ListItem>
+            </ListItem>*/}
             <ListItem button onClick={this.handlePushState} data-go="/rent">
               <ListItemIcon>
                 <img src={history} alt="骑行历史" />

@@ -11,8 +11,8 @@ const getStoresState = (stores) => {
   return Object.keys(stores).reduce((result, storeName) => {
     result[storeName] = stores[storeName].toJson();
     return result;
-  }, {})
-}
+  }, {});
+};
 
 module.exports = (bundle, template, url) => {
   return new Promise((resolve, reject) => {
@@ -41,23 +41,23 @@ module.exports = (bundle, template, url) => {
       if (routerContext.url) {
         resolve({
           routerContext
-        })
+        });
         return false;
       }
       // ctx.body = template.replace('<!--app-->', content);
-      const state = getStoresState(stores)
+      const state = getStoresState(stores);
       // console.log(stores, state);
       let content = ReactSSR.renderToString(serverRenderContent);
       const html = ejs.render(template, {
         appString: content,
         initialState: serializeJavascript(state),
         materialCSS: sheetsRegistry.toString()
-      })
+      });
       // resolve(template.replace('<!--app-->', content));
       resolve(html);
     })
       .catch(err => {
         reject(err);
-      })
-  })
-}
+      });
+  });
+};

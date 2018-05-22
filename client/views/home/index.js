@@ -13,6 +13,7 @@ import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import location from '@imagesPath/location.png';
+import Snackbar from 'material-ui/Snackbar';
 import { get, post } from '../../http/axios';
 
 const styles = theme => ({
@@ -71,8 +72,9 @@ class Home extends React.Component {
       beginTime: null,
       isUsing: false,
       pay: 0,
-      bicycleId: null
-    }
+      bicycleId: null,
+      open: false
+    };
   }
   handleGetLocation = () => {
     const options = {
@@ -108,11 +110,12 @@ class Home extends React.Component {
           const point = {
             lng: pos.longitude,
             lat: pos.latitude
-          }
+          };
           var opts = {
             position: point,
+            /* eslint-disable */
             offset: new BMap.Size(-20, -32)
-          }
+          };
           const labelHTML = `<img src='https://test-1256257404.cos.ap-chengdu.myqcloud.com/location-32.png'
             data-lat=${pos.latitude}
             data-lng=${pos.longitude}
@@ -347,6 +350,11 @@ class Home extends React.Component {
     });
     this.calRealTimeAnimation = requestAnimationFrame(this.handleCalculatorUsringTime);
   }
+  handleClose = () => {
+    this.setState({
+      open: false
+    })
+  }
   handleOverRent = () => {
     const {pay, bicycleId} = this.state;
     const {userId} = this.props.appState;
@@ -359,6 +367,13 @@ class Home extends React.Component {
         if (res.status === 200) {
           console.log('/using/close', res);
           cancelAnimationFrame(this.calRealTimeAnimation);
+          this.setState({ open: true,
+            vertical: 'top',
+            horizontal: 'center',
+            openMsg: '还车成功',
+            isUsing: false,
+            bottomDrawer: false
+          });
           // this.setState({
           //   bottomDrawer: false
           // })
@@ -406,9 +421,20 @@ class Home extends React.Component {
   render() {
     const { classes } = this.props;
     const { bottomDrawer, distance, isUsing, pay, haveUsedTime } = this.state;
+    const { vertical, horizontal, open, openMsg } = this.state;
     return (
       <div className={classes.container}>
         <AppBar onFinishAuth={this.handleInitState}/>
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          autoHideDuration={2000}
+          onClose={this.handleClose}
+          contentprops={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{openMsg}</span>}
+        />
         <div id="map" className={classes.map} onClick={this.handleMarkerClick}>
 
         </div>

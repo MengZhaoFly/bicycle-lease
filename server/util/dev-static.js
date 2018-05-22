@@ -48,12 +48,12 @@ module.exports = (url) => {
         const contents = fs.readFileSync(path.resolve(serverConfig.output.path, serverConfig.output.filename), 'utf8');
         const app = requireFromString(contents, serverConfig.output.filename);
         serverRender(app, template, url)
-        .then(res => {
-          resolve(res)
-        })
-        .catch(err => {
-          reject(err)
-        })
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          });
       })
       .catch(err => {
         reject(err);

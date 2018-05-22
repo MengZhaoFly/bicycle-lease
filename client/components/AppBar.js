@@ -49,16 +49,16 @@ class MenuAppBar extends React.Component {
   };
   componentDidMount = () => {
     get('/sign/auth')
-    .then(res => {
-      if (res.status === 200) {
-        this.props.appState.changeLoginStatus(true, res.userId);
-        this.props.appState.changeAvatarSrc(res.avatarSrc);
-        setTimeout(() => {
-          this.props.onFinishAuth && this.props.onFinishAuth();
-        }, 0);
-      }
-      
-    })
+      .then(res => {
+        if (res.status === 200) {
+          this.props.appState.changeLoginStatus(true, res.userId);
+          this.props.appState.changeAvatarSrc(res.avatarSrc);
+          setTimeout(() => {
+            this.props.onFinishAuth && this.props.onFinishAuth();
+          }, 0);
+        }
+        
+      });
   }
   // login logout control
   handleChange = (event, checked) => {

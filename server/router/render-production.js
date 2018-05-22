@@ -1,4 +1,7 @@
 const router = require('koa-router')();
+const fs = require('fs');
+const path = require('path');
+const serverRender = require('../util/server-render');
 
 const serverEntry = require('../../dist/server-entry');
 const template = fs.readFileSync(path.join(__dirname, '../../dist/server.ejs'), 'utf-8');

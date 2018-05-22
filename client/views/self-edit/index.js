@@ -65,8 +65,8 @@ const styles = theme => {
         fontWeight: 200
       }
     }
-  }
-}
+  };
+};
 
 @inject('appState') @observer
 class RentHistory extends React.Component {
@@ -83,7 +83,7 @@ class RentHistory extends React.Component {
       rePwdError: false,
       showPassword: false,
       showrePassword: false
-    }
+    };
   }
   handleClick = (state) => {
     this.setState({ open: true, ...state });
@@ -115,7 +115,7 @@ class RentHistory extends React.Component {
     if (!this.handleValidate(password)) {
       this.setState({
         pwdError: true
-      })
+      });
       return false;
     }
     // 先focus pwd 然后 blur pwdError: true 之后没有设为 false
@@ -151,19 +151,19 @@ class RentHistory extends React.Component {
         passWord: repassword,
         userId: this.props.appState.userId
       })
-      .then(res => {
-        if (res.status === 200) {
-          this.handleClick({ vertical: 'bottom', horizontal: 'center', snacksMsg: '更换资料成功' });
-          this.props.appState.changeLoginStatus(false, null);
-          this.props.appState.changeAvatarSrc(null);
-          setTimeout(() => {
-            this.props.history.push('/signin');
-          }, 1000);
-        }
-        else {
-          this.handleClick({ vertical: 'bottom', horizontal: 'center', snacksMsg: '更换资料失败' });
-        }
-      })
+        .then(res => {
+          if (res.status === 200) {
+            this.handleClick({ vertical: 'bottom', horizontal: 'center', snacksMsg: '更换资料成功' });
+            this.props.appState.changeLoginStatus(false, null);
+            this.props.appState.changeAvatarSrc(null);
+            setTimeout(() => {
+              this.props.history.push('/signin');
+            }, 1000);
+          }
+          else {
+            this.handleClick({ vertical: 'bottom', horizontal: 'center', snacksMsg: '更换资料失败' });
+          }
+        });
     }
   }
   handleMouseDownPassword = event => {
@@ -190,7 +190,7 @@ class RentHistory extends React.Component {
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     }
   }
   render() {
@@ -287,7 +287,7 @@ class RentHistory extends React.Component {
             <FormControl className={classNames(classes.margin, classes.textField)}>
               <Button variant="raised" color="primary" className={classes.button} onClick={this.handleChangePwd}>
                 修改密码
-            </Button>
+              </Button>
             </FormControl>
           </div>
         </div>

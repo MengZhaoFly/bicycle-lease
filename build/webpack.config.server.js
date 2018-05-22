@@ -1,6 +1,6 @@
-const path = require('path')
-const webpackMerge = require('webpack-merge')
-const baseConfig = require('./webpack.base')
+const path = require('path');
+const webpackMerge = require('webpack-merge');
+const baseConfig = require('./webpack.base');
 
 module.exports = webpackMerge(baseConfig, {
   target: 'node',
@@ -12,4 +12,4 @@ module.exports = webpackMerge(baseConfig, {
     filename: 'server-entry.js',
     libraryTarget: 'commonjs2'
   },
-})
+});

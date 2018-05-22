@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from 'material-ui/styles';
 import { observer, inject } from 'mobx-react';
 import { CircularProgress } from 'material-ui/Progress';
+import { withRouter, Link } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { RentHistory } from '../../store/store';
@@ -26,11 +27,19 @@ const styles = theme => ({
   }
 });
 
-// @inject('rentHistory') @observer
-@inject('rentHistory') @observer
+// @inject('appState') @observer
+// @inject('rentHistory', 'appState') @observer()
+// @inject('rentHistory') @observer()
+@inject('rentHistory', 'appState') @observer(['rentHistory', 'appState'])
 class RentHistoryList extends React.Component {
   componentDidMount = () => {
-    this.props.rentHistory.fetchHistory();
+    if (this.props.appState.isLogin) {
+      this.props.rentHistory.fetchHistory(this.props.appState.userId);
+    }
+    else {
+      console.warn('not login');
+      this.props.history.push('/signin');
+    }
     setTimeout(() => {
       this.props.rentHistory.changeTemp(100);
     }, 3000);
@@ -43,7 +52,7 @@ class RentHistoryList extends React.Component {
     })
       .catch(err => {
         return false;
-      })
+      });
   }
   renderList = () => {
     const {classes} = this.props;
@@ -62,12 +71,12 @@ class RentHistoryList extends React.Component {
         <Paper className={classes.root} elevation={4}>
           <Typography variant="headline" component="h3">
             暂无记录
-            </Typography>
+          </Typography>
           <Typography component="p">
             快去选择一辆车吧。
-            </Typography>
+          </Typography>
         </Paper>
-      )
+      );
     }
     return (
       historyList.map((list, i) => (
@@ -94,5 +103,5 @@ class RentHistoryList extends React.Component {
     );
   }
 }
-
+RentHistoryList = withRouter(RentHistoryList);
 export default withStyles(styles)(RentHistoryList);
